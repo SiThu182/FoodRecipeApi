@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::Apiresource('/category', 'Api\CategoryController');
+
+Route::Apiresource('/type', 'Api\TypeController');
+Route::Apiresource('/meal', 'Api\MealController');
+Route::Apiresource('/recipe', 'Api\RecipeController');

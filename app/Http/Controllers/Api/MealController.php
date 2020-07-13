@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Category;
-use App\Type;
 use App\Meal;
+
+use App\Http\Resources\MealResource;
 class MealController extends Controller
 {
     /**
@@ -16,19 +17,11 @@ class MealController extends Controller
     public function index()
     {
         $meals = Meal::all();
-      
-        $types = Type::all();
-        return view('meal.index',compact('meals','types'));
-    }
+        $meals = MealResource::collection($meals);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'meals' => $meals
+        ],200);
     }
 
     /**
@@ -39,8 +32,7 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
-
-          $request->validate([
+         $request->validate([
             'meal_name' => 'required',
             'type' => 'required',
             'meal_image' =>'required'
@@ -64,7 +56,9 @@ class MealController extends Controller
 
 
 
-        return redirect()->route('meal.index');
+        return response()->json([
+            'success' => "Meal Insert Successful" 
+        ]);
     }
 
     /**
@@ -75,21 +69,11 @@ class MealController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
         $meal = Meal::find($id);
-       
-        $types = Type::all();
-        return view('meal.edit',compact('meal' ,'types'));
+        $meal = MealResource::make($meal);
+        return response()->json([
+            'meal' => $meal
+        ],200);
     }
 
     /**
@@ -101,9 +85,7 @@ class MealController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-       
-        $request->validate([
+         $request->validate([
 
             'meal_name' => 'required',
             'type' => 'required'
@@ -125,7 +107,9 @@ class MealController extends Controller
         $meal->type_id    = request('type');
         $meal->meal_image = $image; 
        
-        return redirect()->route('meal.index');  
+       return response()->json([
+            'success' => "Meal Update Successful"
+       ],200);
     }
 
     /**
@@ -136,6 +120,10 @@ class MealController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $meal = Meal::find($id);
+        $meal->delete();
+        return response()->json([
+            'success' => "Meal Delete Successful"
+        ],200);
     }
 }

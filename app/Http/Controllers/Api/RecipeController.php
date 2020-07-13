@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Recipe;
-use App\Meal;
-use App\Category;
-use App\MeasurementUnit;
-use App\MeasurementQuantity;
-use App\Ingredient;
+use App\Http\Resources\RecipeResource;
+
 class RecipeController extends Controller
 {
     /**
@@ -18,23 +16,11 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        $recipes = Recipe::all();
-        $categories = Category::all();
-        $meal_units = MeasurementUnit::all();
-        $meal_qtys = MeasurementQuantity::all(); 
-        $meals = Meal::all();
-        $ingredients = Ingredient::all();
-        return view('recipe.index',compact('recipes','meals','meal_units','meal_qtys','ingredients','categories'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+          $recipes = Recipe::all();
+          $recipes = RecipeResource::collection($recipes);
+          return response()->json([
+            'recipes' => $recipes
+          ],200);
     }
 
     /**
@@ -45,7 +31,6 @@ class RecipeController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->ingredient_array);
         $request->validate([
             'recipe_name' => 'required|min:2|max:100',
             'preparation' => 'required|min:2|max:100',
@@ -91,7 +76,7 @@ class RecipeController extends Controller
         // $recipe->measurementqtys()->attach(request('measurement_qty'));    
 
           
-           return response()->json(['success'=>' saved successfully.']);
+           return response()->json(['success'=>'Ingredient saved successfully.']);
     }
 
     /**
@@ -110,27 +95,7 @@ class RecipeController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-
-
-        $recipe = Recipe::find($id);
-        $categories = Category::all();
-        $ingredients = Ingredient::all();
-        $meal_units = MeasurementUnit::all();
-        $meal_qtys =MeasurementQuantity::all();
-        // dd($recipe->ingredients);
-        $meals = Meal::all();
-        return view('recipe.edit',compact('recipe','meals','categories','ingredients','meal_units','meal_qtys'));
-    }
-
-    /**
-     * Update the specifi->ed resource in storage.
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -138,7 +103,7 @@ class RecipeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+         $request->validate([
             'recipe_name' => 'required|min:2|max:100',
             'preparation' => 'required|min:2|max:100',
             'recipe_video'=> 'required|min:3|max:255',
@@ -197,9 +162,10 @@ class RecipeController extends Controller
      */
     public function destroy($id)
     {
-         // dd($id);
-        $recipe = Recipe::find($id);
+         $recipe = Recipe::find($id);
         $recipe->delete();
-        return redirect()->route('recipe.index');
+        return response()->json([
+            'success' => "Delete Successfully"
+        ]);
     }
 }

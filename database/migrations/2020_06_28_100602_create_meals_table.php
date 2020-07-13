@@ -17,6 +17,7 @@ class CreateMealsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('type_id');
             $table->string('meal_image');
+            $table->string('meal_name');
             $table->timestamps();
         });
     }

@@ -10,7 +10,15 @@
 					@csrf
 					@method('PUT')
 				<div class="card-body">
-				
+					<div class="row form-group">
+						<div class="col-md-3 ">
+							<label>Meal Name</label>
+						</div>
+						<div class="col-md-8">
+							<input type="text" name="meal_name" class="form-control" id="meal_name" value="{{$meal->meal_name}}">
+						</div>
+	
+					</div>	
 				
 				 
 				

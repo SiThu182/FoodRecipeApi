@@ -9,7 +9,15 @@
 			<form action="{{route('meal.store')}}" method="post" enctype="multipart/form-data">
 					@csrf
 				<div class="card-body">
-				
+					<div class="row form-group">
+						<div class="col-md-3 ">
+							<label>Meal Name</label>
+						</div>
+						<div class="col-md-8">
+							<input type="text" name="meal_name" class="form-control">
+						</div>
+	
+					</div>	
 				
 
 					<div class="row form-group">
@@ -49,7 +57,7 @@
 			<table class="table table-active">
 				<thead>
 					<th>NO.</th>
-					<th>Category Name</th>
+					<th>Meal Name</th>
 					<th>Type Name</th>
 					<th>Image</th>
 				 
@@ -60,6 +68,7 @@
 				<tbody>
 					
 						<td>{{$i++}}</td>
+						<td>{{$meal->meal_name}}</td>
 						<td>{{$meal->type->type_name}}</td>
 						<td><img src="{{ $meal->meal_image}}" width="300" height="300"></td>
 					 
